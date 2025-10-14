@@ -4,12 +4,12 @@
     if (!nav) return;
     const username = localStorage.getItem('username');
     if (username) {
-      nav.innerHTML = `<span class="user-name">${username}</span> <button id="logoutBtn" class="logout-btn">Kijelentkezés</button>`;
-      const logoutBtn = document.getElementById('logoutBtn');
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
+      nav.innerHTML = `<span class="user-name">${username}</span> <a href="#" id="logoutLink">Kijelentkezés</a>`;
+      const logoutLink = document.getElementById('logoutLink');
+      if (logoutLink) {
+        logoutLink.addEventListener('click', (e) => {
+          e.preventDefault();
           localStorage.removeItem('username');
-          // Ha az oldal auth-ot igényel, dobjuk vissza bejelentkezésre, különben frissítés
           if (document.body && document.body.dataset && document.body.dataset.requiresAuth === 'true') {
             window.location.replace('bejelentkezes.html');
           } else {
