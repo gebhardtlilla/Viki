@@ -1,4 +1,4 @@
-const db = require('../../config/db');
+const db = require('../../../../Viki/Api/config/db');
 
 exports.getStilusok = (req, res) => {
   db.query('SELECT nev FROM Stilusok', (err, results) => {

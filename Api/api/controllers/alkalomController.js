@@ -1,4 +1,4 @@
-const db = require('../../config/db');
+const db = require('../../../../Viki/Api/config/db');
 
 exports.getAlkalmak = (req, res) => {
   db.query('SELECT nev FROM Alkalom', (err, results) => {

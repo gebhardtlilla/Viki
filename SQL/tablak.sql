@@ -1,53 +1,142 @@
+-- ===============================
+-- ADATBÁZIS: project_vizsgaremek
+-- ===============================
+
+CREATE DATABASE IF NOT EXISTS vizsgaremek
+  DEFAULT CHARACTER SET utf8mb4
+  COLLATE utf8mb4_hungarian_ci;
+USE vizsgaremek;
+
+-- -------------------------------
+-- 1. Felhasznalo
+-- -------------------------------
 CREATE TABLE Felhasznalo (
-    user_id INT PRIMARY KEY,
-    name VARCHAR(100),
-    email VARCHAR(100) UNIQUE,
-    password VARCHAR(100)
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(100) NOT NULL
 );
 
+-- -------------------------------
+-- 2. Stilusok
+-- -------------------------------
+CREATE TABLE Stilusok (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nev VARCHAR(100) NOT NULL
+);
+
+-- -------------------------------
+-- 3. Alkalom
+-- -------------------------------
+CREATE TABLE Alkalom (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nev VARCHAR(100) NOT NULL
+);
+
+-- -------------------------------
+-- 4. Celcsoport
+-- -------------------------------
+CREATE TABLE Celcsoport (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nev VARCHAR(100) NOT NULL
+);
+
+-- -------------------------------
+-- 5. Ajandek
+-- -------------------------------
 CREATE TABLE Ajandek (
-    id INT PRIMARY KEY,
-    nev VARCHAR(100),
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nev VARCHAR(100) NOT NULL,
     leiras TEXT,
-    ar INT,
-    tipus VARCHAR(50),
+    ar INT NOT NULL,
+    kategoria ENUM('tárgy', 'élmény') NOT NULL,
     stilus_id INT,
     image_url VARCHAR(255),
-    link_url VARCHAR(255)
+    link_url VARCHAR(255),
+    FOREIGN KEY (stilus_id) REFERENCES Stilusok(id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
 );
 
+-- -------------------------------
+-- 6. Ajandek_Alkalom
+-- -------------------------------
 CREATE TABLE Ajandek_Alkalom (
-    ajandek_id INT,
-    alkalom_id INT,
-    PRIMARY KEY(ajandek_id, alkalom_id)
+    ajandek_id INT NOT NULL,
+    alkalom_id INT NOT NULL,
+    PRIMARY KEY (ajandek_id, alkalom_id),
+    FOREIGN KEY (ajandek_id) REFERENCES Ajandek(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (alkalom_id) REFERENCES Alkalom(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
+-- -------------------------------
+-- 7. Ajandek_Celcsoport
+-- -------------------------------
 CREATE TABLE Ajandek_Celcsoport (
-    ajandek_id INT,
-    celcsoport_id INT,
-    PRIMARY KEY(ajandek_id, celcsoport_id)
+    ajandek_id INT NOT NULL,
+    celcsoport_id INT NOT NULL,
+    PRIMARY KEY (ajandek_id, celcsoport_id),
+    FOREIGN KEY (ajandek_id) REFERENCES Ajandek(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (celcsoport_id) REFERENCES Celcsoport(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
-CREATE TABLE Alkalom (
-    id INT PRIMARY KEY,
-    nev VARCHAR(100)
-);
+-- -------------------------------
+-- 8. Kategoriak
+-- -------------------------------
+-- CREATE TABLE Kategoriak (
+--     id INT AUTO_INCREMENT PRIMARY KEY,
+--     nev VARCHAR(100) NOT NULL
+-- );
 
-CREATE TABLE Celcsoport (
-    id INT PRIMARY KEY,
-    nev VARCHAR(100)
-);
 
+-- -------------------------------
+-- 9. Kuponok
+-- -------------------------------
 CREATE TABLE Kuponok (
-    coupon_id INT PRIMARY KEY,
-    user_id INT,
-    coupon_code VARCHAR(50),
-    status VARCHAR(50),
-    discount INT,
-    expiry_date DATE
+    coupon_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    coupon_code VARCHAR(50) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    discount INT NOT NULL,  -- nincs CHECK, így 0-tól tetszőleges összegig
+    expiry_date DATE,
+    FOREIGN KEY (user_id) REFERENCES Felhasznalo(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
-CREATE TABLE Stilusok (
-    id INT PRIMARY KEY,
-    nev VARCHAR(100)
+-- -------------------------------
+-- 10. Gyujtmemeny
+-- -------------------------------
+
+CREATE TABLE Gyujtemeny (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    felhasznalo_id INT NOT NULL,
+    nev VARCHAR(100) NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL,
+    FOREIGN KEY (felhasznalo_id) REFERENCES Felhasznalo(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
+
+
+/*
+ON DELETE CASCADE
+
+Ha egy rekordot kitörölsz a fő táblából (Celcsoport),
+akkor automatikusan törli a hozzá kapcsolódó rekordokat is a gyerek táblában 
+(Ajandek_Celcsoport).
+
+ON UPDATE CASCADE
+Ha egy rekord id-jét megváltoztatod a fő táblában (Celcsoport.id),
+akkor a kapcsolódó rekordokban is frissíti az idegen kulcs értéket 
+(Ajandek_Celcsoport.celcsoport_id).
+*/

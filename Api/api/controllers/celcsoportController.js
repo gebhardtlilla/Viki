@@ -1,4 +1,4 @@
-const db = require('../../config/db');
+const db = require('../../../../Viki/Api/config/db');
 
 exports.getCelcsoportok = (req, res) => {
   db.query('SELECT nev FROM Celcsoport', (err, results) => {
