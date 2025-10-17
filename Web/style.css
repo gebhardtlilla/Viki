@@ -133,8 +133,16 @@ nav a:hover {
   font-size: 17px;
   text-align: center;
   font-weight: 500;
-  box-shadow: 0 1px 6px rgba(200, 50, 70, 0.07);;
+  box-shadow: 0 1px 6px rgba(200, 50, 70, 0.07);
+  cursor: pointer;
+  transition: background 0.2s;
 }
+
+.subcat-item:hover {
+  background: #ffe0ef;
+  color: palevioletred;
+}
+
 nav a.back-btn {
   background-color: palevioletred;
   color: white !important;
@@ -332,6 +340,43 @@ nav a.back-btn:hover {
   font-weight: bold;
   margin-bottom: 28px;
   letter-spacing: 1px;
+}
+
+/* Tovább oldal gombok és lista */
+main {
+  margin-top: 120px;
+  text-align: center;
+}
+
+#elmenyBtn, #targyBtn {
+  padding: 14px 32px;
+  font-size: 18px;
+  border: none;
+  border-radius: 24px;
+  background: palevioletred;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 1px 5px rgba(200, 50, 70, 0.07);
+  transition: background 0.3s;
+  margin: 10px;
+}
+
+#elmenyBtn:hover, #targyBtn:hover {
+  background: #8d465d;
+}
+
+#ajandekLista {
+  margin-top: 30px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 12px;
+  padding: 32px 32px 32px 32px;
+  max-width: 1100px;
+  min-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 18px;
+  box-sizing: border-box;
 }
 
 
