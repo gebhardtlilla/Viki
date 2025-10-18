@@ -20,3 +20,32 @@ exports.getAjandekokByAlkalom = (req, res) => {
     res.json(results);
   });
 };
+
+// Ajándékok lekérése stílus név alapján
+exports.getAjandekokByStilus = (req, res) => {
+  const stilusNev = req.params.stilusNev;
+  const sql = `
+    SELECT a.* FROM Ajandek a
+    JOIN Stilusok s ON a.stilus_id = s.id
+    WHERE LOWER(s.nev) = LOWER(?)
+  `;
+  db.query(sql, [stilusNev], (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(results);
+  });
+};
+
+// Ajándékok lekérése célcsoport név alapján
+exports.getAjandekokByCelcsoport = (req, res) => {
+  const celcsoportNev = req.params.celcsoportNev;
+  const sql = `
+    SELECT a.* FROM Ajandek a
+    JOIN Ajandek_Celcsoport ac ON a.id = ac.ajandek_id
+    JOIN Celcsoport c ON ac.celcsoport_id = c.id
+    WHERE LOWER(c.nev) = LOWER(?)
+  `;
+  db.query(sql, [celcsoportNev], (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(results);
+  });
+};
